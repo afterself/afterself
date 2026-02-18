@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Afterself, Your Agent Lives On</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f0eb;
+    --cream: #e8e0d6;
+    --warm: #c4a882;
+    --glow: #e8c47c;
+    --dim: #6b6560;
+    --faint: #2a2725;
+    --accent: #e0b580;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    line-height: 1.65;
+  }
+
+  ::selection {
+    background: var(--glow);
+    color: var(--black);
+  }
+
+  /* Grain overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,10,0.6);
+    border-bottom: none;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+  }
+
+  .logo img {
+    height: 140px;
+    width: 140px;
+    object-fit: contain;
+  }
+
+  .logo-text {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.02em;
+    color: var(--white);
+  }
+
+  .logo-text span { color: var(--glow); }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .nav-links a {
+    color: var(--dim);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--white) !important;
+    color: var(--black) !important;
+    padding: 0.55rem 1.4rem;
+    border-radius: 100px;
+    font-weight: 500 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-size: 0.85rem !important;
+    transition: transform 0.2s, box-shadow 0.3s !important;
+  }
+
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(232,196,124,0.25);
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(232,196,124,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 100px;
+    font-size: 0.78rem;
+    color: var(--dim);
+    margin-bottom: 3rem;
+    letter-spacing: 0.03em;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--glow);
+    animation: pulse 2s ease infinite;
+  }
+
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--glow);
+  }
+
+  .hero-sub {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    color: var(--dim);
+    max-width: 540px;
+    margin-bottom: 3rem;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+
+  .btn-primary {
+    background: var(--glow);
+    color: var(--black);
+    padding: 0.85rem 2.2rem;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(232,196,124,0.3);
+  }
+
+  .btn-ghost {
+    color: var(--dim);
+    padding: 0.85rem 2.2rem;
+    border-radius: 100px;
+    font-weight: 400;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s;
+  }
+
+  .btn-ghost:hover {
+    color: var(--white);
+    border-color: rgba(255,255,255,0.25);
+  }
+
+
+  /* Modes section */
+  .modes {
+    padding: 8rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm);
+    margin-bottom: 1.5rem;
+  }
+
+  .modes-header {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 4rem;
+    max-width: 700px;
+  }
+
+  .modes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .mode-card {
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 2.5rem;
+    background: rgba(255,255,255,0.015);
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mode-card:hover {
+    border-color: rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.03);
+    transform: translateY(-4px);
+  }
+
+  .mode-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+
+  .mode-card:hover::after { opacity: 1; }
+
+  .mode-executor::after { background: rgba(232,196,124,0.15); }
+  .mode-ghost::after { background: rgba(201,160,108,0.15); }
+
+  .mode-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+  }
+
+  .mode-executor .mode-icon { background: rgba(232,196,124,0.12); }
+  .mode-ghost .mode-icon { background: rgba(201,160,108,0.12); }
+
+  .mode-card h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-bottom: 0.75rem;
+  }
+
+  .mode-card p {
+    color: var(--dim);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .mode-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .mode-features li {
+    color: var(--dim);
+    font-size: 0.85rem;
+    padding-left: 1.2rem;
+    position: relative;
+  }
+
+  .mode-features li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--warm);
+  }
+
+  /* How it works */
+  .how {
+    padding: 6rem 3rem 8rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .how-header {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+    font-weight: 400;
+    margin-bottom: 4rem;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    counter-reset: step;
+  }
+
+  .step {
+    padding: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    counter-increment: step;
+  }
+
+  .step::before {
+    content: '0' counter(step);
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--warm);
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.05em;
+  }
+
+  .step h4 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+    margin-bottom: 0.75rem;
+  }
+
+  .step p {
+    color: var(--dim);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  /* Terminal preview */
+  .terminal-section {
+    padding: 2rem 3rem 8rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .terminal {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .terminal-bar {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .terminal-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .terminal-dot:nth-child(1) { background: #ff5f57; }
+  .terminal-dot:nth-child(2) { background: #febc2e; }
+  .terminal-dot:nth-child(3) { background: #28c840; }
+
+  .terminal-title {
+    margin-left: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--dim);
+  }
+
+  .terminal-body {
+    padding: 1.5rem 2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 2;
+    color: var(--dim);
+  }
+
+  .terminal-body .cmd { color: var(--glow); }
+  .terminal-body .comment { color: rgba(255,255,255,0.2); }
+  .terminal-body .success { color: #28c840; }
+  .terminal-body .info { color: var(--warm); }
+  .terminal-body .ghost { color: #a78bfa; }
+
+  /* Mortality Pool */
+  .pool {
+    padding: 8rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .pool-header {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+    max-width: 700px;
+  }
+
+  .pool-header em {
+    font-style: italic;
+    color: var(--glow);
+  }
+
+  .pool-sub {
+    color: var(--dim);
+    font-size: 1.05rem;
+    max-width: 600px;
+    margin-bottom: 3.5rem;
+    line-height: 1.7;
+  }
+
+  .pool-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .pool-card {
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 2.5rem;
+    background: rgba(255,255,255,0.015);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pool-card-main {
+    grid-column: 1 / -1;
+  }
+
+  .pool-card::after {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(232,196,124,0.08);
+    filter: blur(80px);
+    pointer-events: none;
+  }
+
+  .pool-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--warm);
+    margin-bottom: 0.75rem;
+  }
+
+  .pool-balance {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(2.5rem, 5vw, 3.8rem);
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .pool-balance .currency {
+    font-size: 0.4em;
+    color: var(--dim);
+    font-weight: 400;
+  }
+
+  .pool-balance .loading {
+    font-size: 0.4em;
+    color: var(--dim);
+    animation: pulse 1.5s ease infinite;
+  }
+
+  .pool-address {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--dim);
+    word-break: break-all;
+    margin-top: 0.5rem;
+  }
+
+  .pool-stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+  }
+
+  .pool-stat-desc {
+    color: var(--dim);
+    font-size: 0.85rem;
+  }
+
+  .pool-how {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3.5rem;
+    counter-reset: pool-step;
+  }
+
+  .pool-step {
+    padding: 1.5rem 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    counter-increment: pool-step;
+  }
+
+  .pool-step::before {
+    content: '0' counter(pool-step);
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--warm);
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .pool-step h4 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+  }
+
+  .pool-step p {
+    color: var(--dim);
+    font-size: 0.85rem;
+    line-height: 1.65;
+  }
+
+  @media (max-width: 768px) {
+    .pool { padding: 5rem 1.5rem; }
+    .pool-cards { grid-template-columns: 1fr; }
+    .pool-how { grid-template-columns: 1fr; }
+  }
+
+  /* Powered by */
+  .powered {
+    padding: 4rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .powered span {
+    font-size: 0.78rem;
+    color: var(--dim);
+    letter-spacing: 0.05em;
+  }
+
+  .powered-logos {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .powered-logos a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--white);
+    text-decoration: none;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+  }
+
+  .powered-logos a:hover { opacity: 1; }
+
+  /* CTA */
+  .cta {
+    padding: 10rem 3rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .cta::before {
+    content: '';
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(232,196,124,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    line-height: 1.15;
+  }
+
+  .cta h2 em {
+    font-style: italic;
+    color: var(--glow);
+  }
+
+  .cta p {
+    color: var(--dim);
+    font-size: 1.05rem;
+    max-width: 480px;
+    margin: 0 auto 2.5rem;
+  }
+
+  /* Footer */
+  footer {
+    padding: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  footer span {
+    font-size: 0.78rem;
+    color: var(--dim);
+  }
+
+  footer .footer-links {
+    display: flex;
+    gap: 2rem;
+  }
+
+  footer a {
+    font-size: 0.78rem;
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  footer a:hover { color: var(--white); }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+
+  @keyframes typeIn {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 6rem 1.5rem 3rem; }
+    .modes { padding: 5rem 1.5rem; }
+    .modes-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .how, .terminal-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .powered { flex-direction: column; text-align: center; }
+    .cta { padding: 6rem 1.5rem; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">
+    <img src="logo-transparent.png" alt="Afterself">
+  </a>
+  <div class="nav-links">
+    <a href="#modes">Modes</a>
+    <a href="#how">How it Works</a>
+    <a href="#pool">Pool</a>
+    <a href="https://github.com" target="_blank">GitHub</a>
+    <a href="#cta" class="nav-cta">Get Early Access</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>Your agent<br><em>lives on</em></h1>
+  <p class="hero-sub">
+    An autonomous AI agent that executes your final wishes and preserves your voice;
+    because nothing should be left unsaid, undone, or unloved.
+  </p>
+  <div class="hero-actions">
+    <a href="#cta" class="btn-primary">Join the Waitlist</a>
+    <a href="#how" class="btn-ghost">See How It Works</a>
+  </div>
+</section>
+
+<section class="modes" id="modes">
+  <div class="section-label">Two Modes</div>
+  <h2 class="modes-header">It doesn't just store your data.<br>It <em>acts</em> on your behalf.</h2>
+  <div class="modes-grid">
+
+    <div class="mode-card mode-executor">
+      <div class="mode-icon">⚡</div>
+      <h3>Executor Mode</h3>
+      <p>Handles your affairs when you can't. Transfers assets, sends final messages, cancels subscriptions, and closes accounts, all autonomously.</p>
+      <ul class="mode-features">
+        <li>Crypto & asset transfers via escrow</li>
+        <li>Send pre-written messages to loved ones</li>
+        <li>Cancel subscriptions & close accounts</li>
+        <li>Contact your lawyer with documents</li>
+        <li>Execute custom action plans</li>
+      </ul>
+    </div>
+
+    <div class="mode-card mode-ghost">
+      <div class="mode-icon">✦</div>
+      <h3>Ghost Mode</h3>
+      <p>Preserves your digital presence and voice. Lets loved ones talk to "you" on the channels you already use, with your tone, your humor, your warmth.</p>
+      <ul class="mode-features">
+        <li>Persona trained on your real messages</li>
+        <li>Voice cloning from your recordings</li>
+        <li>Responds on WhatsApp, Telegram, Discord</li>
+        <li>Maintains social media presence</li>
+        <li>Transparent AI labeling & kill switch</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="section-label">How It Works</div>
+  <h2 class="how-header">Set it up once.<br>It takes care of the rest.</h2>
+  <div class="steps">
+    <div class="step">
+      <h4>Install the Skill</h4>
+      <p>Afterself runs as an OpenClaw skill on your own machine. Your data never leaves your device. Install in one command and run the setup wizard.</p>
+    </div>
+    <div class="step">
+      <h4>Configure Your Will</h4>
+      <p>Define your action plans; messages, transfers, account closures. Optionally enable Ghost Mode and let it learn your voice and writing style over time.</p>
+    </div>
+    <div class="step">
+      <h4>Check In & Live</h4>
+      <p>Afterself pings you periodically on WhatsApp, Telegram, or any channel. Just reply. If you stop responding, it confirms with your trusted contacts before activating.</p>
+    </div>
+  </div>
+</section>
+
+<section class="terminal-section">
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <span class="terminal-title">afterself, openclaw skill</span>
+    </div>
+    <div class="terminal-body">
+      <div><span class="cmd">$</span> openclaw install afterself</div>
+      <div><span class="success">✓</span> Skill installed: afterself v0.1.0</div>
+      <div>&nbsp;</div>
+      <div><span class="cmd">$</span> openclaw run afterself setup</div>
+      <div><span class="info">→</span> Configuring heartbeat interval... <span class="success">72h</span></div>
+      <div><span class="info">→</span> Adding trusted contact... <span class="success">+1 (555) 012-3456</span></div>
+      <div><span class="info">→</span> Encrypting vault... <span class="success">AES-256-GCM ✓</span></div>
+      <div><span class="info">→</span> Executor mode... <span class="success">enabled</span></div>
+      <div><span class="ghost">→</span> Ghost mode... <span class="ghost">enabled (learning)</span></div>
+      <div>&nbsp;</div>
+      <div><span class="comment"># afterself is now watching. live your life.</span></div>
+      <div><span class="comment"># it will check in via WhatsApp every 72 hours.</span></div>
+      <div><span class="comment"># if you stop responding, your will is executed.</span></div>
+      <div><span class="comment"># your voice is preserved. nothing is left unsaid.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="pool" id="pool">
+  <div class="section-label">Mortality Pool</div>
+  <h2 class="pool-header">A collective bet<br>on <em>life</em>.</h2>
+  <p class="pool-sub">
+    Every Afterself user can join the mortality pool. Buy the token, hold it while you're alive.
+    When someone's switch triggers, their tokens flow to the pool and get redistributed to everyone
+    still standing. A tontine for the digital age.
+  </p>
+
+  <div class="pool-cards">
+    <div class="pool-card pool-card-main">
+      <div class="pool-label">Pool Wallet Balance</div>
+      <div class="pool-balance">
+        <span id="pool-sol-balance" class="loading">Loading...</span>
+        <span class="currency" id="pool-sol-label" style="display:none">SOL</span>
+      </div>
+      <div class="pool-address">
+        6J8AwTGc8ys9L7Z8dC7Wcd8AbmPxyKpZH8nXu4BrB5md
+      </div>
+    </div>
+
+    <div class="pool-card">
+      <div class="pool-label">Mechanism</div>
+      <div class="pool-stat-value">Tontine</div>
+      <p class="pool-stat-desc">Tokens from the departed are redistributed to the living. The longer you survive, the more you accumulate.</p>
+    </div>
+
+    <div class="pool-card">
+      <div class="pool-label">Security</div>
+      <div class="pool-stat-value">On-chain</div>
+      <p class="pool-stat-desc">All transfers happen on Solana. Transparent, verifiable, and irreversible. Your keys, your tokens.</p>
+    </div>
+  </div>
+
+  <div class="pool-how">
+    <div class="pool-step">
+      <h4>Get the Token</h4>
+      <p>Buy the Afterself SPL token on Solana. Hold it in the wallet you connect to your Afterself agent.</p>
+    </div>
+    <div class="pool-step">
+      <h4>Live Your Life</h4>
+      <p>Keep checking in with Afterself. Your tokens stay in your wallet as long as you're around.</p>
+    </div>
+    <div class="pool-step">
+      <h4>Pool Redistributes</h4>
+      <p>When someone's switch triggers, their tokens automatically go to the pool. The pool redistributes to all living holders.</p>
+    </div>
+  </div>
+</section>
+
+<div class="powered">
+  <span>Powered by</span>
+  <div class="powered-logos">
+    <a href="https://github.com/openclaw/openclaw">🦞 OpenClaw</a>
+    <a href="#">🔐 AES-256</a>
+    <a href="#">🗣️ ElevenLabs</a>
+    <a href="#">⛓️ Escrow Protocol</a>
+    <a href="https://solana.com">◎ Solana</a>
+  </div>
+</div>
+
+<section class="cta" id="cta">
+  <h2>Your self, <em>after</em>.<br>Nothing left unsaid.</h2>
+  <p>Join the waitlist. Be the first to set up your Afterself agent when we launch.</p>
+  <a href="#" class="btn-primary">Get Early Access</a>
+</section>
+
+<footer>
+  <span>© 2026 Afterself. Open source under MIT.</span>
+  <div class="footer-links">
+    <a href="#">GitHub</a>
+    <a href="#">Docs</a>
+    <a href="#">Discord</a>
+    <a href="#">Ethics & Safety</a>
+  </div>
+</footer>
+
+<script>
+(async function fetchPoolBalance() {
+  const POOL_WALLET = '6J8AwTGc8ys9L7Z8dC7Wcd8AbmPxyKpZH8nXu4BrB5md';
+  const RPC_URL = 'https://api.mainnet-beta.solana.com';
+  const balanceEl = document.getElementById('pool-sol-balance');
+  const labelEl = document.getElementById('pool-sol-label');
+
+  try {
+    const res = await fetch(RPC_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getBalance',
+        params: [POOL_WALLET]
+      })
+    });
+    const data = await res.json();
+    if (data.result && data.result.value !== undefined) {
+      const sol = (data.result.value / 1e9).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 4
+      });
+      balanceEl.textContent = sol;
+      balanceEl.classList.remove('loading');
+      labelEl.style.display = '';
+    } else {
+      balanceEl.textContent = '0.00';
+      balanceEl.classList.remove('loading');
+      labelEl.style.display = '';
+    }
+  } catch {
+    balanceEl.textContent = '—';
+    balanceEl.classList.remove('loading');
+  }
+})();
+</script>
+
+</body>
+</html>
