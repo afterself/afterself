@@ -117,6 +117,25 @@
     box-shadow: 0 4px 20px rgba(232,196,124,0.25);
   }
 
+  .nav-launch {
+    background: var(--black) !important;
+    color: var(--white) !important;
+    padding: 0.55rem 1.4rem;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-size: 0.85rem !important;
+    transition: transform 0.2s, box-shadow 0.3s !important;
+  }
+
+  .nav-launch:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255,255,255,0.25) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+
   /* Hero */
   .hero {
     min-height: 100vh;
@@ -201,13 +220,32 @@
     font-size: 0.95rem;
     text-decoration: none;
     transition: all 0.3s;
-    border: none;
+    border: 1px solid var(--glow);
     cursor: pointer;
   }
 
   .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 30px rgba(232,196,124,0.3);
+  }
+
+  .btn-dark {
+    background: var(--black);
+    color: var(--white);
+    padding: 0.85rem 2.2rem;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: 1px solid rgba(255,255,255,0.12);
+    cursor: pointer;
+  }
+
+  .btn-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    border-color: rgba(255,255,255,0.2);
   }
 
   .btn-ghost {
@@ -602,6 +640,101 @@
     .pool-how { grid-template-columns: 1fr; }
   }
 
+  /* Ethics */
+  .ethics {
+    padding: 8rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ethics-header {
+    font-family: 'Instrument Serif', serif;
+    font-size: 2.8rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .ethics-header em {
+    color: var(--glow);
+    font-style: italic;
+  }
+
+  .ethics-intro {
+    color: var(--dim);
+    font-size: 1.05rem;
+    max-width: 600px;
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+
+  .ethics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .ethics-card {
+    background: var(--faint);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .ethics-card h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--glow);
+    margin-bottom: 0.75rem;
+  }
+
+  .ethics-card p {
+    color: var(--dim);
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .ethics-never {
+    background: var(--faint);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .ethics-never h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  .ethics-never-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem 2rem;
+  }
+
+  .ethics-never-list span {
+    color: var(--dim);
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  .ethics-never-list span::before {
+    content: '✕ ';
+    color: #c47c7c;
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .ethics { padding: 5rem 1.5rem; }
+    .ethics-grid { grid-template-columns: 1fr; }
+    .ethics-never-list { grid-template-columns: 1fr; }
+  }
+
   /* Powered by */
   .powered {
     padding: 4rem 3rem;
@@ -748,8 +881,10 @@
     <a href="#modes">Modes</a>
     <a href="#how">How it Works</a>
     <a href="#pool">Pool</a>
-    <a href="https://github.com" target="_blank">GitHub</a>
-    <a href="#cta" class="nav-cta">Get Early Access</a>
+    <a href="#ethics">Ethics</a>
+    <a href="https://github.com/afterself/afterself" target="_blank">GitHub</a>
+    <a href="#" class="nav-cta">Buy $SELF</a>
+    <a href="#" class="nav-launch">Launch App</a>
   </div>
 </nav>
 
@@ -760,8 +895,8 @@
     because nothing should be left unsaid, undone, or unloved.
   </p>
   <div class="hero-actions">
-    <a href="#cta" class="btn-primary">Join the Waitlist</a>
-    <a href="#how" class="btn-ghost">See How It Works</a>
+    <a href="#" class="btn-primary">Buy $SELF</a>
+    <a href="#" class="btn-dark">Launch App</a>
   </div>
 </section>
 
@@ -895,6 +1030,51 @@
   </div>
 </section>
 
+<section class="ethics" id="ethics">
+  <div class="section-label">Ethics & Safety</div>
+  <h2 class="ethics-header">Technology around death<br>demands <em>extraordinary care</em>.</h2>
+  <p class="ethics-intro">We'd rather ship nothing than ship something harmful. These are the principles we build on, and the lines we will not cross.</p>
+
+  <div class="ethics-grid">
+    <div class="ethics-card">
+      <h4>Consent Is Sacred</h4>
+      <p>Only you can create your own Afterself agent. Ghost Mode requires explicit opt-in while you are alive. Nobody can create a ghost of you after the fact.</p>
+    </div>
+    <div class="ethics-card">
+      <h4>Transparency Always</h4>
+      <p>Every Ghost Mode interaction is clearly labeled as AI-generated. We will never allow a ghost to impersonate someone without disclosure.</p>
+    </div>
+    <div class="ethics-card">
+      <h4>Your Data Stays With You</h4>
+      <p>Afterself is local-first. Your vault, persona data, and voice samples live on your device. Nothing is uploaded unless you configure it.</p>
+    </div>
+    <div class="ethics-card">
+      <h4>The Living Come First</h4>
+      <p>Ghost Mode exists to comfort, not to trap. Time decay is on by default. Beneficiaries can deactivate it at any time via the kill switch.</p>
+    </div>
+    <div class="ethics-card">
+      <h4>No Financial Exploitation</h4>
+      <p>Ghost Mode has zero financial capabilities. We will never monetize ghost interactions or serve ads against conversations with the dead.</p>
+    </div>
+    <div class="ethics-card">
+      <h4>Dignity of the Deceased</h4>
+      <p>The ghost will not hallucinate opinions the person never expressed. It represents who they were, not a continually-evolving fiction.</p>
+    </div>
+  </div>
+
+  <div class="ethics-never">
+    <h4>What We Will Never Build</h4>
+    <div class="ethics-never-list">
+      <span>A ghost that hides the fact it's AI</span>
+      <span>A ghost created without consent</span>
+      <span>A ghost with financial capabilities</span>
+      <span>A ghost that evolves beyond real data</span>
+      <span>A subscription model that monetizes grief</span>
+      <span>Integration with advertising systems</span>
+    </div>
+  </div>
+</section>
+
 <div class="powered">
   <span>Powered by</span>
   <div class="powered-logos">
@@ -909,16 +1089,16 @@
 <section class="cta" id="cta">
   <h2>Your self, <em>after</em>.<br>Nothing left unsaid.</h2>
   <p>Join the waitlist. Be the first to set up your Afterself agent when we launch.</p>
-  <a href="#" class="btn-primary">Get Early Access</a>
+  <a href="#" class="btn-primary">Buy $SELF</a>
+  <a href="#" class="btn-dark">Launch App</a>
 </section>
 
 <footer>
   <span>© 2026 Afterself. Open source under MIT.</span>
   <div class="footer-links">
-    <a href="#">GitHub</a>
+    <a href="https://github.com/afterself/afterself" target="_blank">GitHub</a>
     <a href="#">Docs</a>
     <a href="#">Discord</a>
-    <a href="#">Ethics & Safety</a>
   </div>
 </footer>
 

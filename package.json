@@ -28,7 +28,7 @@
     "type": "git",
     "url": "https://github.com/afterself/afterself"
   },
-  "homepage": "https://afterself.sh",
+  "homepage": "https://afterself.xyz",
   "dependencies": {
     "@solana/web3.js": "^1.95.0",
     "@solana/spl-token": "^0.4.0"
@@ -39,6 +39,13 @@
     "@types/node": "^22.0.0",
     "eslint": "^9.0.0"
   },
+  "files": [
+    "SKILL.md",
+    "HEARTBEAT.md",
+    "ETHICS.md",
+    "scripts/",
+    "references/"
+  ],
   "engines": {
     "node": ">=20.0.0"
   }
